@@ -1,5 +1,7 @@
 #/usr/bin/env bash -e
 
+touch .shoppinglist
+
 VENV=venv
 
 if [ ! -d "$VENV" ]
@@ -19,4 +21,3 @@ fi
 
 pip install -r requirements.txt
 
-touch .shoppinglist
