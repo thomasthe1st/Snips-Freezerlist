@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 import pickle
 import random
+import io
 
 
 class ShoppingList:
     def __init__(self):
         self.wanted_intents = []  # For reacting only with wanted intents
         self.shoppinglist_path = ".shoppinglist"
-        open(self.shoppinglist_path, 'a').close()  # Create file, if not available
+        io.open(self.shoppinglist_path, 'a').close()  # Create file, if not available
         self.shoppinglist = self.read_shoppinglist()
 
     def add_item(self, intentMessage):
@@ -73,13 +74,13 @@ class ShoppingList:
 
     def read_shoppinglist(self):
         try:
-            with open(self.shoppinglist_path, 'rb') as f:
+            with io.open(self.shoppinglist_path, 'rb') as f:
                 itemlist = pickle.load(f)
             return itemlist
         except EOFError:  # if no list in file
             return []
 
     def save_shoppinglist(self):
-        with open(self.shoppinglist_path, "wb") as f:
+        with io.open(self.shoppinglist_path, "wb") as f:
             pickle.dump(self.shoppinglist, f)
 
