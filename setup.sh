@@ -1,6 +1,4 @@
-#/usr/bin/bash
-
-touch .shoppinglist
+#/usr/bin/env bash -e
 
 VENV=venv
 
@@ -21,3 +19,4 @@ fi
 
 pip install -r requirements.txt
 
+touch .shoppinglist
