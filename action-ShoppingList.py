@@ -5,7 +5,7 @@ import ConfigParser
 from hermes_python.hermes import Hermes
 from hermes_python.ontology import *
 import io
-from shoppinglist import Shoppinglist
+from shoppinglist import ShoppingList
 
 
 def subscribe_intent_callback(hermes, intentMessage):
@@ -45,6 +45,6 @@ def subscribe_intent_callback(hermes, intentMessage):
 
 
 if __name__ == "__main__":
-    shoppinglist = Shoppinglist()
+    shoppinglist = ShoppingList()
     with Hermes("localhost:1883") as h:
         h.subscribe_intents(subscribe_intent_callback).start()
