@@ -30,8 +30,8 @@ def subscribe_intent_callback(hermes, intentMessage):
             hermes.publish_end_session(intentMessage.session_id, result_sentence)
         else:
             shoppinglist.wanted_intents = ['domi:confirmShoppingList']
-            hermes.publish_end_session(intentMessage.session_id, result_sentence,
-                                       shoppinglist.wanted_intents)
+            hermes.publish_continue_session(intentMessage.session_id, result_sentence,
+                                            shoppinglist.wanted_intents)
         
     elif intentname == "domi:confirmShoppingList":
         if "domi:confirmShoppingList" in shoppinglist.wanted_intents:
