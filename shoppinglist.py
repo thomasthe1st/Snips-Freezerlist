@@ -8,6 +8,12 @@ class ShoppingList:
     def __init__(self):
         self.wanted_intents = []  # For reacting only with wanted intents
         self.shoppinglist_path = ".shoppinglist"
+        try:
+            with io.open(self.shoppinglist_path, 'rb') as f:
+                itemlist = pickle.load(f)
+            print("opened:", itemlist)
+        except EOFError as e:  # if no list in file
+            print("eerrroorr:", e)
         io.open(self.shoppinglist_path, 'a').close()  # Create file, if not available
         self.shoppinglist = self.read_shoppinglist()
 
