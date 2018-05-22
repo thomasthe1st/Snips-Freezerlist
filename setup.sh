@@ -19,4 +19,7 @@ fi
 
 pip install -r requirements.txt
 
-touch .shoppinglist
+if [ ! -f ./install.sh ]; then
+    touch .shoppinglist
+    chown _snips-skills .shoppinglist
+fi
