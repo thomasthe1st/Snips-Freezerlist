@@ -24,7 +24,7 @@ def subscribe_intent_callback(hermes, intentMessage):
         hermes.publish_end_session(intentMessage.session_id, result_sentence)
 
     elif intentname == "domi:clearShoppingList":
-        result_sentence = shoppinglist.try_clear(intentMessage)
+        result_sentence = shoppinglist.try_clear()
         if result_sentence == 1:
             result_sentence = "Die Einkaufsliste ist schon leer."
             hermes.publish_end_session(intentMessage.session_id, result_sentence)
