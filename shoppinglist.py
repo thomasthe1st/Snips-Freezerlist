@@ -78,13 +78,13 @@ class ShoppingList:
             else:
                 notlist_items.append(item.value)
         response = ""
-        if added_items:
-            items_str = "".join(item + ", " for item in added_items[:-1])
-            if len(added_items) >= 2:
-                items_str += "und {} ".format(added_items[-1])
+        if removed_items:
+            items_str = "".join(item + ", " for item in removed_items[:-1])
+            if len(removed_items) >= 2:
+                items_str += "und {} ".format(removed_items[-1])
                 word_pl_sg = "wurden"
             else:
-                items_str += "{} ".format(added_items[-1])
+                items_str += "{} ".format(removed_items[-1])
                 word_pl_sg = "wurde"
             first_str = items_str + random.choice(["{} entfernt".format(word_pl_sg),
                                                    "{} von der Einkaufsliste entfernt".format(word_pl_sg)])
