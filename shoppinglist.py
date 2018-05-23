@@ -25,7 +25,7 @@ class ShoppingList:
                 dublicate_items.append(item.value)
             else:
                 added_items.append(item.value)
-                self.shoppinglist.append(item)
+                self.shoppinglist.append(item.value)
         response = ""
         if added_items:
             items_str = "".join(item + ", " for item in added_items[:-1])
@@ -74,7 +74,7 @@ class ShoppingList:
         for item in item_list:
             if item.value in self.shoppinglist:
                 removed_items.append(item.value)
-                self.shoppinglist.remove(item)
+                self.shoppinglist.remove(item.value)
             else:
                 notlist_items.append(item.value)
         response = ""
