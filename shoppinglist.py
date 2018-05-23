@@ -88,7 +88,7 @@ class ShoppingList:
                 word_pl_sg = "wurde"
             first_str = items_str + random.choice(["{} entfernt".format(word_pl_sg),
                                                    "{} von der Einkaufsliste entfernt".format(word_pl_sg)])
-            if not dublicate_items:
+            if not notlist_items:
                 first_str += "."
             else:
                 first_str += ", aber "
