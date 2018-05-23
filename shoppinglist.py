@@ -11,13 +11,49 @@ class ShoppingList:
         try:
             with io.open(self.shoppinglist_path, 'rb') as f:
                 itemlist = pickle.load(f)
-            print("opened:", itemlist)
         except EOFError as e:  # if no list in file
-            print("eerrroorr:", e)
+            itemlist = []
         io.open(self.shoppinglist_path, 'a').close()  # Create file, if not available
         self.shoppinglist = self.read_shoppinglist()
 
     def add_item(self, intentMessage):
+        item_list = intentMessage.slots.item.all()
+        dublicate_items = []
+        added_items = []
+        for item.value in item_list:
+            if item.value in self.shoppinglist:
+                dublicate_items.append(item.value)
+            else:
+                added_items.append(item.value)
+                self.shoppinglist.append(item)
+        response = ""
+        if added_items:
+            items_str = "".join(item + ", " for item in added_items[:-1])
+            if len(added_items) >= 2:
+                items_str += "und {} ".format(added_items[-1])
+                word_pl_sg = "wurden"
+            else:
+                items_str += "{} ".format(added_items[-1])
+                word_pl_sg = "wurde"
+            first_str = items_str + random.choice(["{} hinzugefügt".format(word_pl_sg),
+                                                   "{} auf die Einkaufsliste geschrieben".format(word_pl_sg)])
+            if not dublicate_items:
+                first_str += "."
+            else:
+                first_str += ", aber "
+            response += first_str
+        if dublicate_items:
+            items_str = "".join(item + ", " for item in dublicate_items[:-1])
+            if len(dublicate_items) >= 2:
+                items_str += "und {} ".format(dublicate_items[-1])
+                word_pl_sg = "sind"
+            else:
+                items_str += "{} ".format(dublicate_items[-1])
+                word_pl_sg = "ist"
+            second_str = items_str + random.choice(["{} schon auf der Liste.".format(word_pl_sg),
+                                                    "{} auf der Liste schon vorhanden.".format(word_pl_sg)])
+        self.save_shoppinglist()
+        """
         item = intentMessage.slots.item.first().value
         if item in self.shoppinglist:
             response = random.choice(["{item} steht schon auf der Liste.".format(item=str(item)),
@@ -27,9 +63,47 @@ class ShoppingList:
             self.save_shoppinglist()
             response = random.choice(["{item} wurde hinzugefügt.".format(item=str(item)),
                                       "{item} wurde auf die Einkaufsliste geschrieben.".format(item=str(item))])
+        """
         return response
 
     def remove_item(self, intentMessage):
+        item_list = intentMessage.slots.item.all()
+        notlist_items = []
+        removed_items = []
+        for item.value in item_list:
+            if item.value in self.shoppinglist:
+                removed_items.append(item.value)
+                self.shoppinglist.remove(item)
+            else:
+                notlist_items.append(item.value)
+        response = ""
+        if added_items:
+            items_str = "".join(item + ", " for item in added_items[:-1])
+            if len(added_items) >= 2:
+                items_str += "und {} ".format(added_items[-1])
+                word_pl_sg = "wurden"
+            else:
+                items_str += "{} ".format(added_items[-1])
+                word_pl_sg = "wurde"
+            first_str = items_str + random.choice(["{} entfernt".format(word_pl_sg),
+                                                   "{} von der Einkaufsliste entfernt".format(word_pl_sg)])
+            if not dublicate_items:
+                first_str += "."
+            else:
+                first_str += ", aber "
+            response += first_str
+        if notlist_items:
+            items_str = "".join(item + ", " for item in notlist_items[:-1])
+            if len(notlist_items) >= 2:
+                items_str += "und {} ".format(notlist_items[-1])
+                word_pl_sg = "sind"
+            else:
+                items_str += "{} ".format(notlist_items[-1])
+                word_pl_sg = "ist"
+            second_str = items_str + random.choice(["{} nicht auf der Liste.".format(word_pl_sg),
+                                                    "{} auf der Einkaufsliste nicht vorhanden.".format(word_pl_sg)])
+        self.save_shoppinglist()
+        """
         item = intentMessage.slots.item.first().value
         if item in self.shoppinglist:
             self.shoppinglist.remove(item)
@@ -37,6 +111,7 @@ class ShoppingList:
             response = "{item} wurde von der Einkaufsliste entfernt.".format(item=str(item))
         else:
             response = "{item} ist auf der Einkaufsliste nicht vorhanden.".format(item=str(item))
+        """
         return response
 
     def is_item(self, intentMessage):
