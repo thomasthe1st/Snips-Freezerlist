@@ -20,7 +20,7 @@ class ShoppingList:
         item_list = intentMessage.slots.item.all()
         dublicate_items = []
         added_items = []
-        for item.value in item_list:
+        for item in item_list:
             if item.value in self.shoppinglist:
                 dublicate_items.append(item.value)
             else:
@@ -70,7 +70,7 @@ class ShoppingList:
         item_list = intentMessage.slots.item.all()
         notlist_items = []
         removed_items = []
-        for item.value in item_list:
+        for item in item_list:
             if item.value in self.shoppinglist:
                 removed_items.append(item.value)
                 self.shoppinglist.remove(item)
