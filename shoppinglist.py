@@ -127,7 +127,7 @@ class ShoppingList:
     def try_clear(self):
         if len(self.shoppinglist) > 1:
             response = "Die Einkaufsliste enthält noch {num} Elemente." \
-                       "Bist du dir sicher?".format(num=len(self.shoppinglist))
+                       " Bist du dir sicher?".format(num=len(self.shoppinglist))
         elif len(self.shoppinglist) == 1:
             response = "Die Einkaufsliste enthält noch ein Element. Bist du dir sicher?"
         else:
@@ -146,7 +146,7 @@ class ShoppingList:
         if len(self.shoppinglist) > 1:
             shoppinglist_str = ""
             for item in self.shoppinglist[:-1]:
-                shoppinglist_str = shoppinglist_str + item + ", "
+                shoppinglist_str = shoppinglist_str + str(item) + ", "
             response = "Die Einkaufsliste enthält {items}und {last}.".format(items=shoppinglist_str,
                                                                              last=self.shoppinglist[-1])
         elif len(self.shoppinglist) == 1:
