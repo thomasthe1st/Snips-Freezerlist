@@ -52,8 +52,8 @@ class ShoppingList:
                 word_pl_sg = "ist"
             second_str = items_str + random.choice(["{} schon auf der Liste.".format(word_pl_sg),
                                                     "{} auf der Liste schon vorhanden.".format(word_pl_sg)])
+            response += second_str
         self.save_shoppinglist()
-        response = first_str + second_str
         """
         item = intentMessage.slots.item.first().value
         if item in self.shoppinglist:
@@ -103,8 +103,8 @@ class ShoppingList:
                 word_pl_sg = "ist"
             second_str = items_str + random.choice(["{} nicht auf der Liste.".format(word_pl_sg),
                                                     "{} auf der Einkaufsliste nicht vorhanden.".format(word_pl_sg)])
+            response += first_str
         self.save_shoppinglist()
-        response = first_str + second_str
         """
         item = intentMessage.slots.item.first().value
         if item in self.shoppinglist:
