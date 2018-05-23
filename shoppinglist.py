@@ -54,17 +54,6 @@ class ShoppingList:
                                                     "{} auf der Liste schon vorhanden.".format(word_pl_sg)])
             response += second_str
         self.save_shoppinglist()
-        """
-        item = intentMessage.slots.item.first().value
-        if item in self.shoppinglist:
-            response = random.choice(["{item} steht schon auf der Liste.".format(item=str(item)),
-                                      "{item} ist auf der Liste schon vorhanden.".format(item=str(item))])
-        else:
-            self.shoppinglist.append(item)
-            self.save_shoppinglist()
-            response = random.choice(["{item} wurde hinzugefügt.".format(item=str(item)),
-                                      "{item} wurde auf die Einkaufsliste geschrieben.".format(item=str(item))])
-        """
         return response
 
     def remove_item(self, intentMessage):
@@ -105,15 +94,6 @@ class ShoppingList:
                                                     "{} auf der Einkaufsliste nicht vorhanden.".format(word_pl_sg)])
             response += first_str
         self.save_shoppinglist()
-        """
-        item = intentMessage.slots.item.first().value
-        if item in self.shoppinglist:
-            self.shoppinglist.remove(item)
-            self.save_shoppinglist()
-            response = "{item} wurde von der Einkaufsliste entfernt.".format(item=str(item))
-        else:
-            response = "{item} ist auf der Einkaufsliste nicht vorhanden.".format(item=str(item))
-        """
         return response
 
     def is_item(self, intentMessage):
