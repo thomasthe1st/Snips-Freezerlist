@@ -92,7 +92,7 @@ class ShoppingList:
                 word_pl_sg = "ist"
             second_str = items_str + random.choice(["{} nicht auf der Liste.".format(word_pl_sg),
                                                     "{} auf der Einkaufsliste nicht vorhanden.".format(word_pl_sg)])
-            response += first_str
+            response += second_str
         self.save_shoppinglist()
         return response
 
