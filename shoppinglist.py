@@ -17,7 +17,7 @@ class ShoppingList:
         self.shoppinglist = self.read_shoppinglist()
 
     def add_item(self, intentMessage):
-        item_list = intentMessage.slots.item.all()
+        item_list = [item.encode('utf8') for item in intentMessage.slots.item.all()]
         dublicate_items = []
         added_items = []
         for item in item_list:
