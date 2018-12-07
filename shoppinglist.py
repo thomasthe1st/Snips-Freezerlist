@@ -8,24 +8,19 @@ class ShoppingList:
     def __init__(self):
         self.wanted_intents = []  # For reacting only with wanted intents
         self.shoppinglist_path = ".shoppinglist"
-        try:
-            with io.open(self.shoppinglist_path, 'rb') as f:
-                itemlist = pickle.load(f)
-        except EOFError as e:  # if no list in file
-            itemlist = []
         io.open(self.shoppinglist_path, 'a').close()  # Create file, if not available
         self.shoppinglist = self.read_shoppinglist()
 
     def add_item(self, intentMessage):
-        item_list = [item.encode('utf8') for item in intentMessage.slots.item.all()]
+        item_list = [item.value.encode('utf8') for item in intentMessage.slots.item.all()]
         dublicate_items = []
         added_items = []
         for item in item_list:
-            if item.value in self.shoppinglist:
-                dublicate_items.append(item.value)
+            if item in self.shoppinglist:
+                dublicate_items.append(item)
             else:
-                added_items.append(item.value)
-                self.shoppinglist.append(item.value)
+                added_items.append(item)
+                self.shoppinglist.append(item)
         response = ""
         if added_items:
             items_str = "".join(item + ", " for item in added_items[:-1])
