@@ -13,14 +13,11 @@ class ShoppingList:
 
     def add_item(self, intentMessage):
         item_list = [item.value.encode('utf8') for item in intentMessage.slots.item.all()]
-        dublicate_items = []
-        added_items = []
-        for item in item_list:
-            if item in self.shoppinglist:
-                dublicate_items.append(item)
-            else:
-                added_items.append(item)
-                self.shoppinglist.append(item)
+        dublicate_items = [item for item in item_list if item in self.shoppinglist]
+        added_items = [item for item in item_list if item not in self.shoppinglist]
+        for item in added_items:
+            self.shoppinglist.append(item)
+
         response = ""
         if added_items:
             items_str = "".join(item + ", " for item in added_items[:-1])
@@ -52,15 +49,11 @@ class ShoppingList:
         return response.decode('utf8')
 
     def remove_item(self, intentMessage):
-        item_list = intentMessage.slots.item.all()
-        notlist_items = []
-        removed_items = []
-        for item in item_list:
-            if item.value in self.shoppinglist:
-                removed_items.append(item.value)
-                self.shoppinglist.remove(item.value)
-            else:
-                notlist_items.append(item.value)
+        item_list = [item.value.encode('utf8') for item in intentMessage.slots.item.all()]
+        notlist_items = [item for item in item_list if item not in self.shoppinglist]
+        removed_items = [item for item in item_list if item in self.shoppinglist]
+        self.shoppinglist = [item for item in self.shoppinglist if item not in removed_items]
+
         response = ""
         if removed_items:
             items_str = "".join(item + ", " for item in removed_items[:-1])
@@ -89,15 +82,15 @@ class ShoppingList:
                                                     "{} auf der Einkaufsliste nicht vorhanden.".format(word_pl_sg)])
             response += second_str
         self.save_shoppinglist()
-        return response
+        return response.decode('utf8')
 
     def is_item(self, intentMessage):
-        item = intentMessage.slots.item.first().value
+        item = intentMessage.slots.item.first().value.encode('utf8')
         if item in self.shoppinglist:
             response = "Ja, {item} steht auf der Einkaufsliste.".format(item=str(item))
         else:
             response = "Nein, {item} ist nicht auf der Einkaufsliste.".format(item=str(item))
-        return response
+        return response.decode('utf8')
 
     def try_clear(self):
         if len(self.shoppinglist) > 1:
@@ -128,7 +121,7 @@ class ShoppingList:
             response = "Die Einkaufsliste enthält nur {item}.".format(item=self.shoppinglist[0])
         else:  # If shoppinglist is empty
             response = "Die Einkaufsliste ist leer."
-        return response
+        return response.decode('utf8')
 
     def read_shoppinglist(self):
         try:
