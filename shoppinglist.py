@@ -49,7 +49,7 @@ class ShoppingList:
                                                     "{} auf der Liste schon vorhanden.".format(word_pl_sg)])
             response += second_str
         self.save_shoppinglist()
-        return response
+        return response.decode('utf8')
 
     def remove_item(self, intentMessage):
         item_list = intentMessage.slots.item.all()
