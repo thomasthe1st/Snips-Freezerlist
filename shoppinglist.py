@@ -100,7 +100,7 @@ class ShoppingList:
             response = "Die Einkaufsliste enthält noch ein Element. Bist du dir sicher?"
         else:
             response = 1  # Error: Shoppinglist is already empty - no dialogue start
-        return response
+        return response.decode('utf8')
 
     def clear_confirmed(self, intentMessage):
         if intentMessage.slots.answer.first().value == "yes":
