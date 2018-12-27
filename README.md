@@ -72,6 +72,8 @@ The email address used in "FROM" and "TO" can be the same.
 `{"FROM": "hello@gmx.com", "PASSWORD": "bo95345b3v", "HOST":
 "mail.gmx.com", "PORT": 587, "TO": "hello@gmx.com"}`
 
+Don't forget all the quotation marks and the curly brackets at the beginning and at the end!
+
 With a Google email configuration you have to enable the option called like "allow external apps to send emails".
 
 ## IV. Usage
