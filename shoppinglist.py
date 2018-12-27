@@ -1,18 +1,25 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import pickle
 import random
 import io
+from ast import literal_eval
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import datetime
+import socket
 
 
 class ShoppingList:
-    def __init__(self):
+    def __init__(self, config):
+        self.config = config
         self.wanted_intents = []  # For reacting only with wanted intents
         self.shoppinglist_path = ".shoppinglist"
         io.open(self.shoppinglist_path, 'a').close()  # Create file, if not available
         self.shoppinglist = self.read_shoppinglist()
 
-    def add_item(self, intentMessage):
-        item_list = [item.value.encode('utf8') for item in intentMessage.slots.item.all()]
+    def add_item(self, intentmessage):
+        item_list = [item.value.encode('utf8') for item in intentmessage.slots.item.all()]
         dublicate_items = [item for item in item_list if item in self.shoppinglist]
         added_items = [item for item in item_list if item not in self.shoppinglist]
         for item in added_items:
@@ -48,8 +55,8 @@ class ShoppingList:
         self.save_shoppinglist()
         return response.decode('utf8')
 
-    def remove_item(self, intentMessage):
-        item_list = [item.value.encode('utf8') for item in intentMessage.slots.item.all()]
+    def remove_item(self, intentmessage):
+        item_list = [item.value.encode('utf8') for item in intentmessage.slots.item.all()]
         notlist_items = [item for item in item_list if item not in self.shoppinglist]
         removed_items = [item for item in item_list if item in self.shoppinglist]
         self.shoppinglist = [item for item in self.shoppinglist if item not in removed_items]
@@ -84,8 +91,8 @@ class ShoppingList:
         self.save_shoppinglist()
         return response.decode('utf8')
 
-    def is_item(self, intentMessage):
-        item = intentMessage.slots.item.first().value.encode('utf8')
+    def is_item(self, intentmessage):
+        item = intentmessage.slots.item.first().value.encode('utf8')
         if item in self.shoppinglist:
             response = "Ja, {item} steht auf der Einkaufsliste.".format(item=str(item))
         else:
@@ -99,11 +106,11 @@ class ShoppingList:
         elif len(self.shoppinglist) == 1:
             response = "Die Einkaufsliste enthält noch ein Element. Bist du dir sicher?"
         else:
-            response = 1  # Error: Shoppinglist is already empty - no dialogue start
+            response = "empty"  # Error: Shoppinglist is already empty - no dialogue start
         return response.decode('utf8')
 
-    def clear_confirmed(self, intentMessage):
-        if intentMessage.slots.answer.first().value == "yes":
+    def clear_confirmed(self, intentmessage):
+        if intentmessage.slots.answer.first().value == "yes":
             self.shoppinglist = []
             self.save_shoppinglist()
             return "Die Einkaufsliste wurde geleert."
@@ -115,12 +122,76 @@ class ShoppingList:
             shoppinglist_str = ""
             for item in self.shoppinglist[:-1]:
                 shoppinglist_str = shoppinglist_str + str(item) + ", "
-            response = "Die Einkaufsliste enthält {items}und {last}.".format(items=shoppinglist_str,
-                                                                             last=self.shoppinglist[-1])
+            response = "Die Einkaufsliste enthält {items}und {last}.".format(
+                items=shoppinglist_str, last=self.shoppinglist[-1])
         elif len(self.shoppinglist) == 1:
             response = "Die Einkaufsliste enthält nur {item}.".format(item=self.shoppinglist[0])
         else:  # If shoppinglist is empty
             response = "Die Einkaufsliste ist leer."
+        return response.decode('utf8')
+
+    def send(self):
+        if len(self.shoppinglist) == 0:
+            return "Die Einkaufsliste ist leer. Eine Email ist daher überflüssig.".decode('utf8')
+
+        try:
+            email_dict = literal_eval(self.config['secret']['email_data'])
+            param_names = ["FROM", "PASSWORD", "HOST", "PORT", "TO"]
+            param_count = len([key for key in email_dict if key in param_names and email_dict[key]])
+        except (ValueError, KeyError) as e:
+            email_dict = {}
+            param_count = 0
+            print("Error: ", e)
+        if param_count != 5 or not email_dict:
+            response = "Der Email-Versand ist nicht oder falsch eingerichtet. Bitte schaue in der Beschreibung " \
+                       "dieser App nach, wie man den Versand einrichtet."
+            return response.decode('utf8')
+
+        msg = MIMEMultipart()
+        msg['From'] = email_dict['FROM']
+        msg['To'] = email_dict['TO']
+        now = datetime.datetime.now()
+        now_date = now.strftime("%d.%m.%Y")
+        now_time = now.strftime("%H:%M Uhr")
+        msg['Subject'] = "Deine Einkaufsliste vom {date}".format(date=now_date)
+
+        emailtext = "Du hast eine Email mit deiner <b>Einkaufsliste</b> bekommen, weil du es "
+        emailtext += "am {date} um {time} so wolltest.</br></br>".format(date=now_date, time=now_time)
+        emailtext += "Hier ist die Liste:<ul>"
+        for item in self.shoppinglist:
+            emailtext += "<li>{item}</li>".format(item=item)
+        emailtext += '</ul></br></br></br>Diese Mail wurde automatisch generiert von der App "Einkaufsliste" '
+        emailtext += 'aus dem Snips App Store. Der Quellcode ist frei und kann '
+        emailtext += '<a href="https://github.com/MrJohnZoidberg/Snips-Einkaufsliste">hier</a> eingesehen werden. '
+        emailtext += 'Die Anmeldedaten, die für den Versand benötigt werden, sind lokal im System, auf dem Snips '
+        emailtext += 'läuft, gespeichert.'
+
+        msg.attach(MIMEText(emailtext, 'html', 'utf-8'))
+
+        try:
+            server = smtplib.SMTP(email_dict['HOST'], int(email_dict['PORT']), timeout=1)
+        except socket.gaierror:
+            response = "Die Email konnte nicht versendet werden, weil der Host oder Port nicht erreichbar ist."
+            return response.decode('utf8')
+        except socket.timeout:
+            response = "Die Email konnte nicht versendet werden, weil die Anmeldezeit überschritten wurde. " \
+                       "Vermutlich ist der Port nicht richtig eingestellt."
+            return response.decode('utf8')
+
+        try:
+            server.starttls()
+            server.login(email_dict['FROM'], email_dict['PASSWORD'])
+            text = msg.as_string()
+            server.sendmail(email_dict['FROM'], email_dict['TO'], text)
+            response = "Die Einkaufsliste wurde als Email versendet."
+        except smtplib.SMTPAuthenticationError:
+            response = "Die Email konnte nicht versendet werden, weil die Anmeldedaten ungültig sind."
+        except smtplib.SMTPRecipientsRefused:
+            response = "Die Email konnte nicht versendet werden, weil die Empfängeradresse diese nicht angenommen " \
+                       "hat. Vermutlich ist sie nicht richtig eingestellt."
+        finally:
+            server.quit()
+
         return response.decode('utf8')
 
     def read_shoppinglist(self):
@@ -134,4 +205,3 @@ class ShoppingList:
     def save_shoppinglist(self):
         with io.open(self.shoppinglist_path, "wb") as f:
             pickle.dump(self.shoppinglist, f)
-
