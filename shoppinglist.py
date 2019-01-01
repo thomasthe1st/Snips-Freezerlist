@@ -150,7 +150,7 @@ class ShoppingList:
             return response.decode('utf8')
         elif bad_params:
             response = "Der Email-Versand ist falsch eingerichtet. Es fehlen notwendige Parameter."
-            print("Fehler: " + response + "\nFalsche oder fehlende Parameter:\n\t" + str(bad_params))
+            print("Fehler: " + response + "\nFehlende Parameter:\n\t" + str(bad_params))
             return response.decode('utf8')
 
         msg = MIMEMultipart()
