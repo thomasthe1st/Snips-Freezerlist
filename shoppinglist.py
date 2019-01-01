@@ -136,20 +136,26 @@ class ShoppingList:
 
         try:
             email_dict = literal_eval(self.config['secret']['email_data'])
-            param_names = ["FROM", "PASSWORD", "HOST", "PORT", "TO"]
-            param_count = len([key for key in email_dict if key in param_names and email_dict[key]])
+            param_names = ["from", "password", "host", "port", "to"]
+            good_params = [key.lower() for key in email_dict
+                           if key.lower() in param_names and email_dict.get(key.lower())]
+            bad_params = [name for name in param_names if name not in good_params]
         except (ValueError, KeyError) as e:
             email_dict = {}
-            param_count = 0
+            bad_params = []
             print("Error: ", e)
-        if param_count != 5 or not email_dict:
-            response = "Der Email-Versand ist nicht oder falsch eingerichtet. Bitte schaue in der Beschreibung " \
-                       "dieser App nach, wie man den Versand einrichtet."
+        if not email_dict:
+            response = "Der Email-Versand ist nicht eingerichtet: Es konnten keine Parameter gefunden werden. " \
+                       "Bitte schaue in der Beschreibung dieser App nach, wie man den Versand einrichtet."
+            return response.decode('utf8')
+        elif bad_params:
+            response = "Der Email-Versand ist falsch eingerichtet. Es fehlen notwendige Parameter."
+            print("Fehler: " + response + "\nFalsche oder fehlende Parameter:\n\t" + str(bad_params))
             return response.decode('utf8')
 
         msg = MIMEMultipart()
-        msg['From'] = email_dict['FROM']
-        msg['To'] = email_dict['TO']
+        msg['From'] = email_dict['from']
+        msg['To'] = email_dict['to']
         now = datetime.datetime.now()
         now_date = now.strftime("%d.%m.%Y")
         now_time = now.strftime("%H:%M Uhr")
@@ -170,7 +176,7 @@ class ShoppingList:
         msg.attach(MIMEText(emailtext, 'html', 'utf-8'))
 
         try:
-            server = smtplib.SMTP(email_dict['HOST'], int(email_dict['PORT']), timeout=1)
+            server = smtplib.SMTP(email_dict['host'], int(email_dict['port']), timeout=1)
         except socket.gaierror:
             response = "Die Email konnte nicht versendet werden, weil der Host oder Port nicht erreichbar ist."
             return response.decode('utf8')
@@ -181,9 +187,9 @@ class ShoppingList:
 
         try:
             server.starttls()
-            server.login(email_dict['FROM'], email_dict['PASSWORD'])
+            server.login(email_dict['from'], email_dict['password'])
             text = msg.as_string()
-            server.sendmail(email_dict['FROM'], email_dict['TO'], text)
+            server.sendmail(email_dict['from'], email_dict['to'], text)
             response = "Die Einkaufsliste wurde als Email versendet."
         except smtplib.SMTPAuthenticationError:
             response = "Die Email konnte nicht versendet werden, weil die Anmeldedaten ungültig sind."
