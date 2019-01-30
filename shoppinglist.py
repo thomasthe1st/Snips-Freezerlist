@@ -136,6 +136,7 @@ class ShoppingList:
 
         try:
             email_dict = literal_eval(self.config['secret']['email_data'])
+            email_dict = dict((key.lower(), value) for key, value in email_dict.items())
             param_names = ["from", "password", "host", "port", "to"]
             good_params = [key.lower() for key in email_dict
                            if key.lower() in param_names and email_dict.get(key.lower())]
