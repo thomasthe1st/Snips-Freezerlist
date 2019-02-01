@@ -76,6 +76,14 @@ Don't forget all the quotation marks and the curly brackets at the beginning and
 
 With a Google email configuration you have to enable the option called like "allow external apps to send emails".
 
+The content of the config.ini file should look like this:
+
+```
+[secret]
+email_data={"FROM": "meinemail@gmx.net", "PASSWORD": "eb457fg9", "HOST":
+"mail.gmx.com", "PORT": 587, "TO": "hello@gmx.com"}
+```
+
 ## IV. Usage
 
 ### 1. Example sentences
