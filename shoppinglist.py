@@ -135,6 +135,7 @@ class ShoppingList:
             return "Die Einkaufsliste ist leer. Eine Email ist daher überflüssig."
 
         try:
+            print(self.config)
             email_dict = literal_eval(self.config['secret']['email_data'])
             param_names = ["from", "password", "host", "port", "to"]
             good_params = [key.lower() for key in email_dict
