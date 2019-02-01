@@ -19,7 +19,7 @@ class ShoppingList:
         self.shoppinglist = self.read_shoppinglist()
 
     def add_item(self, intentmessage):
-        item_list = [item.value.encode('utf8') for item in intentmessage.slots.item.all()]
+        item_list = [item.value for item in intentmessage.slots.item.all()]
         dublicate_items = [item for item in item_list if item in self.shoppinglist]
         added_items = [item for item in item_list if item not in self.shoppinglist]
         for item in added_items:
@@ -53,10 +53,10 @@ class ShoppingList:
                                                     "{} auf der Liste schon vorhanden.".format(word_pl_sg)])
             response += second_str
         self.save_shoppinglist()
-        return response.decode('utf8')
+        return response
 
     def remove_item(self, intentmessage):
-        item_list = [item.value.encode('utf8') for item in intentmessage.slots.item.all()]
+        item_list = [item.value for item in intentmessage.slots.item.all()]
         notlist_items = [item for item in item_list if item not in self.shoppinglist]
         removed_items = [item for item in item_list if item in self.shoppinglist]
         self.shoppinglist = [item for item in self.shoppinglist if item not in removed_items]
@@ -89,15 +89,15 @@ class ShoppingList:
                                                     "{} auf der Einkaufsliste nicht vorhanden.".format(word_pl_sg)])
             response += second_str
         self.save_shoppinglist()
-        return response.decode('utf8')
+        return response
 
     def is_item(self, intentmessage):
-        item = intentmessage.slots.item.first().value.encode('utf8')
+        item = intentmessage.slots.item.first().value
         if item in self.shoppinglist:
             response = "Ja, {item} steht auf der Einkaufsliste.".format(item=str(item))
         else:
             response = "Nein, {item} ist nicht auf der Einkaufsliste.".format(item=str(item))
-        return response.decode('utf8')
+        return response
 
     def try_clear(self):
         if len(self.shoppinglist) > 1:
@@ -107,7 +107,7 @@ class ShoppingList:
             response = "Die Einkaufsliste enthält noch ein Element. Bist du dir sicher?"
         else:
             response = "empty"  # Error: Shoppinglist is already empty - no dialogue start
-        return response.decode('utf8')
+        return response
 
     def clear_confirmed(self, intentmessage):
         if intentmessage.slots.answer.first().value == "yes":
@@ -128,11 +128,11 @@ class ShoppingList:
             response = "Die Einkaufsliste enthält nur {item}.".format(item=self.shoppinglist[0])
         else:  # If shoppinglist is empty
             response = "Die Einkaufsliste ist leer."
-        return response.decode('utf8')
+        return response
 
     def send(self):
         if len(self.shoppinglist) == 0:
-            return "Die Einkaufsliste ist leer. Eine Email ist daher überflüssig.".decode('utf8')
+            return "Die Einkaufsliste ist leer. Eine Email ist daher überflüssig."
 
         try:
             email_dict = literal_eval(self.config['secret']['email_data'])
@@ -147,11 +147,11 @@ class ShoppingList:
         if not email_dict:
             response = "Der Email-Versand ist nicht eingerichtet: Es konnten keine Parameter gefunden werden. " \
                        "Bitte schaue in der Beschreibung dieser App nach, wie man den Versand einrichtet."
-            return response.decode('utf8')
+            return response
         elif bad_params:
             response = "Der Email-Versand ist falsch eingerichtet. Es fehlen notwendige Parameter."
             print("Fehler: " + response + "\nFehlende Parameter:\n\t" + str(bad_params))
-            return response.decode('utf8')
+            return response
 
         msg = MIMEMultipart()
         msg['From'] = email_dict['from']
@@ -179,11 +179,11 @@ class ShoppingList:
             server = smtplib.SMTP(email_dict['host'], int(email_dict['port']), timeout=1)
         except socket.gaierror:
             response = "Die Email konnte nicht versendet werden, weil der Host oder Port nicht erreichbar ist."
-            return response.decode('utf8')
+            return response
         except socket.timeout:
             response = "Die Email konnte nicht versendet werden, weil die Anmeldezeit überschritten wurde. " \
                        "Vermutlich ist der Port nicht richtig eingestellt."
-            return response.decode('utf8')
+            return response
 
         try:
             server.starttls()
@@ -198,8 +198,7 @@ class ShoppingList:
                        "hat. Vermutlich ist sie nicht richtig eingestellt."
         finally:
             server.quit()
-
-        return response.decode('utf8')
+        return response
 
     def read_shoppinglist(self):
         try:
