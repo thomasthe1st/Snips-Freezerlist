@@ -18,7 +18,7 @@ With this app for [Snips.ai](https://snips.ai/) you can manage a shoppinglist wi
 
 :exclamation: The following instructions assume that [Snips](https://snips.gitbook.io/documentation/snips-basics) is
 already configured and running on your device (e.g. a Raspberry Pi 3 from the 
-[Snips Maker Kit](https://makers.snips.ai/kit/) with 
+[Snips Maker Kit](https://www.seeedstudio.com/snips.html) with 
 [Raspbian](https://www.raspberrypi.org/downloads/raspbian/) Stretch Lite). 
 [SAM](https://snips.gitbook.io/getting-started/installation) should
 also already be set up and connected to your device and your account.
@@ -56,32 +56,33 @@ Be careful with your data!
 The value of the parameter "email_data" is a string in form of a python dictionary.
 Don't worry if you never heard of something like that.
 Two curly brackets containing five items which are key-value pairs:
-- "FROM": email address from which the shoppinglist will be sent
-- "PASSWORD": password which belongs to the email address
-- "HOST": SMTP host, ex.: "mail.gmx.net"
-- "PORT": SMTP port, usually 587
-- "TO": email address to which the shopping list will be sent
+- "from": email address from which the shoppinglist will be sent
+- "password": password which belongs to the email address - Since I ported this app to Python 3 you can't have a `%` in
+   your password anymore (I'm still trying to fix this).
+- "host": SMTP host, ex.: "mail.gmx.net"
+- "port": SMTP port, usually 587
+- "to": email address to which the shopping list will be sent
 
 The email address used in "FROM" and "TO" can be the same.
 
 *Examples:*
 
-`{"FROM": "meinemail@gmx.net", "PASSWORD": "eb457fg9", "HOST":
-"mail.gmx.net", "PORT": 587, "TO": "meinemail@gmx.net"}`
+`{"from": "meinemail@gmx.net", "password": "eb457fg9", "host":
+"mail.gmx.net", "port": 587, "to": "meinemail@gmx.net"}`
 
-`{"FROM": "hello@gmx.com", "PASSWORD": "bo95345b3v", "HOST":
-"mail.gmx.com", "PORT": 587, "TO": "hello@gmx.com"}`
+`{"from": "hello@gmx.com", "password": "bo95345b3v", "host":
+"mail.gmx.com", "port": 587, "to": "hello@gmx.com"}`
 
 Don't forget all the quotation marks and the curly brackets at the beginning and at the end!
 
 With a Google email configuration you have to enable the option called like "allow external apps to send emails".
 
-The content of the config.ini file should look like this:
+The content of the `config.ini` file should look like this:
 
 ```
 [secret]
-email_data={"FROM": "meinemail@gmx.net", "PASSWORD": "eb457fg9", "HOST":
-"mail.gmx.com", "PORT": 587, "TO": "hello@gmx.com"}
+email_data={"from": "meinemail@gmx.net", "password": "eb457fg9", "host":
+"mail.gmx.com", "port": 587, "to": "hello@gmx.com"}
 ```
 
 ## IV. Usage
