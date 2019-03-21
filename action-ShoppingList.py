@@ -3,6 +3,7 @@
 
 import configparser
 from hermes_python.hermes import Hermes
+import hermes_python.ontology.dialogue as dialogue
 import io
 from shoppinglist import ShoppingList
 
@@ -47,7 +48,7 @@ def intent_callback(hermes, intent_message):
             hermes.publish_end_session(intent_message.session_id, result_sentence)
         else:
             shoppinglist.wanted_intents = [user_intent("confirmShoppingList")]
-            configure_message = {'intents': [{'intent_name': user_intent("confirmShoppingList"), 'enable': True}]}
+            configure_message = dialogue.DialogueConfiguration().enable_intent(user_intent("confirmShoppingList"))
             hermes.configure_dialogue(configure_message)
             hermes.publish_continue_session(intent_message.session_id, result_sentence,
                                             shoppinglist.wanted_intents)
@@ -67,7 +68,7 @@ def intent_callback(hermes, intent_message):
 
 
 def intent_not_recognized_callback(hermes, intent_message):
-    configure_message = {'intents': [{'intent_name': user_intent("confirmShoppingList"), 'enable': True}]}
+    configure_message = dialogue.DialogueConfiguration().disable_intent(user_intent("confirmShoppingList"))
     hermes.configure_dialogue(configure_message)
     shoppinglist.wanted_intents = []
     hermes.publish_end_session({'sessionId': intent_message.session_id,
