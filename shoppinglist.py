@@ -166,9 +166,9 @@ class ShoppingList:
         emailtext += "Hier ist die Liste:<ul>"
         for item in self.shoppinglist:
             emailtext += "<li>{item}</li>".format(item=item)
-        emailtext += '</ul></br></br></br>Diese Mail wurde automatisch generiert von der '
-        emailtext += '<a href="https://console.snips.ai/store/de/skill_Va52B5v45GB">App</a> "Einkaufsliste" '
-        emailtext += 'aus dem Snips App Store. Der Quellcode ist frei und kann '
+        emailtext += '</ul></br></br></br>Diese Mail wurde automatisch generiert von der App '
+        emailtext += '<a href="https://console.snips.ai/store/de/skill_Va52B5v45GB">Einkaufsliste</a> '
+        emailtext += 'aus dem Snips App Store. Der Quellcode ist frei und kann auf Github '
         emailtext += '<a href="https://github.com/MrJohnZoidberg/Snips-Einkaufsliste">hier</a> eingesehen werden. '
         emailtext += 'Die Anmeldedaten, die für den Versand benötigt werden, sind lokal im System, auf dem Snips '
         emailtext += 'läuft, gespeichert.'
