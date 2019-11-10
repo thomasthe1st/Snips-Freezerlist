@@ -135,7 +135,7 @@ email_data={"from": "meinemail@gmx.net", "password": "eb457fg9", "host":
 
 Please report errors and bugs (you can see them with `sam service log snips-skill-server` or on the Pi
 with `sudo tail -f /var/log/syslog`) by opening
-a [new issue](https://github.com/MrJohnZoidberg/Snips-Freezerlist/issues/new).
+a [new issue](https://github.com/thomasthe1st/Snips-Freezerlist/issues/new).
 You can also write other ideas for this app. Thank you for your contribution.
 
 Made with :blue_heart:
