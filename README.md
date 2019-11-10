@@ -1,5 +1,5 @@
-# Snips-Einkaufsliste :memo:
-With this app for [Snips.ai](https://snips.ai/) you can manage a shoppinglist with your voice.
+# Snips-Freezerlist :memo:
+With this app for [Snips.ai](https://snips.ai/) you can manage a freezerlist with your voice.
 
 ##### Table of Contents  
 [Features](#i-features)  
@@ -12,19 +12,19 @@ With this app for [Snips.ai](https://snips.ai/) you can manage a shoppinglist wi
 
 ## I. Features
 
-- Ability to send the shoppinglist to an email address :postal_horn:
+- Ability to send the freezerlist to an email address :postal_horn:
 
 ## II. Installation
 
 :exclamation: The following instructions assume that [Snips](https://snips.gitbook.io/documentation/snips-basics) is
 already configured and running on your device (e.g. a Raspberry Pi 3 from the 
 [Snips Maker Kit](https://www.seeedstudio.com/snips.html) with 
-[Raspbian](https://www.raspberrypi.org/downloads/raspbian/) Stretch Lite). 
+[Raspbian](https://www.raspberrypi.org/downloads/raspbian/) Buster Lite). 
 [SAM](https://snips.gitbook.io/getting-started/installation) should
 also already be set up and connected to your device and your account.
 
 1. In the German [app store](https://console.snips.ai/) add the
-app `Einkaufsliste` (by domi; [this](https://console.snips.ai/store/de/skill_Va52B5v45GB)) to
+app `TK-liste` (by domi; [this](https://console.snips.ai/store/de/skill_Va52B5v45GB)) to
 your *German* assistant.
 
 2. If you already have the same assistant on your platform, update it with:
@@ -45,7 +45,7 @@ can found the explanation of it.
 ## III. Configuration
 
 You can configure the app so that it is able to send an email
-containing the shoppinglist to an address.
+containing the freezerlist to an address.
 
 :exclamation: Never enter credentials into a programm or website unless you know exactly what is happening to it.
 In this case you can view the source code and see what is done
@@ -56,7 +56,7 @@ Be careful with your data!
 The value of the parameter "email_data" is a string in form of a python dictionary.
 Don't worry if you never heard of something like that.
 Two curly brackets containing five items which are key-value pairs:
-- "from": email address from which the shoppinglist will be sent
+- "from": email address from which the freezerlist will be sent
 - "password": password which belongs to the email address - Since I ported this app to Python 3 you can't have a `%` in
    your password anymore (I'm still trying to fix this).
 - "host": SMTP host, ex.: "mail.gmx.net"
@@ -91,34 +91,34 @@ email_data={"from": "meinemail@gmx.net", "password": "eb457fg9", "host":
 
 **Add item:**
 
-- *Schreibe `Tomaten` auf meine Einkaufsliste.*
-- *Kannst du bitte `Milch` auf meiner Einkaufsliste notieren?*
+- *Schreibe `Tomaten` auf meine Tiefkühlliste.*
+- *Kannst du bitte `Brot` auf meiner Tiefkühlliste notieren?*
 
 **Ask for item:**
 
-- *Ist `Essig` schon auf der Einkaufsliste?*
-- *Stehen `Himbeeren` auf meiner Einkaufsliste?*
+- *Ist `Kuchen` schon auf der Tiefkühlliste?*
+- *Stehen `Himbeeren` auf meiner Tiefkühlliste?*
 
 **Get items:**
 
-- *Was steht auf der Einkaufsliste?*
-- *Lese meine Einkaufsliste vor.*
+- *Was steht auf der Tiefkühlliste?*
+- *Lese meine Tiefkühlliste vor.*
 
 **Send list:**
 
-- *Schicke meine Einkaufsliste per Email.*
-- *Ich möchte die Einkaufsliste als Email auf mein Handy haben.*
+- *Schicke meine Tiefkühlliste per Email.*
+- *Ich möchte die Tiefkühlliste als Email auf mein Handy haben.*
 
 **Delete item:**
 
-- *Entferne `Kümmel` von der Einkaufsliste.*
-- *Streiche `Apfelsaft` von der Einkaufsliste weg.*
-- *Ich brauche keinen `Zimt` mehr.*
+- *Entferne `Himbeeren` von der Tiefkühlliste.*
+- *Streiche `Buttergemüse` von der Tiefkühlliste weg.*
+- *Ich habe keine `Pommes` mehr.*
 
 **Delete list:**
 
-- *Lösche die Einkaufsliste.*
-- *Entferne die gesamte Einkaufsliste.*
+- *Lösche die Tiefkühlliste.*
+- *Entferne die gesamte Tiefkühlliste.*
 
 
 ## V. Troubleshooting
@@ -135,7 +135,7 @@ email_data={"from": "meinemail@gmx.net", "password": "eb457fg9", "host":
 
 Please report errors and bugs (you can see them with `sam service log snips-skill-server` or on the Pi
 with `sudo tail -f /var/log/syslog`) by opening
-a [new issue](https://github.com/MrJohnZoidberg/Snips-Einkaufsliste/issues/new).
+a [new issue](https://github.com/MrJohnZoidberg/Snips-Freezerlist/issues/new).
 You can also write other ideas for this app. Thank you for your contribution.
 
 Made with :blue_heart:
