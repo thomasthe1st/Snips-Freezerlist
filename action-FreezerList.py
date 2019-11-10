@@ -6,7 +6,7 @@ from hermes_python.hermes import Hermes
 from hermes_python.ontology.dialogue import DialogueConfiguration
 import io
 import toml
-from shoppinglist import ShoppingList
+from freezerlist import FreezerList
 
 
 USERNAME_INTENTS = "domi"
@@ -33,51 +33,51 @@ def read_configuration_file(configuration_file):
 def intent_callback(hermes, intent_message):
     # conf = read_configuration_file(CONFIG_INI)
     intentname = intent_message.intent.intent_name
-    if intentname == add_prefix("addShoppingListItem"):
+    if intentname == add_prefix("addFreezerListItem"):
         result_sentence = shoppinglist.add_item(intent_message)
         hermes.publish_end_session(intent_message.session_id, result_sentence)
 
-    elif intentname == add_prefix("removeShoppingListItem"):
+    elif intentname == add_prefix("removeFreezerListItem"):
         result_sentence = shoppinglist.remove_item(intent_message)
         hermes.publish_end_session(intent_message.session_id, result_sentence)
 
-    elif intentname == add_prefix("isItemOnShoppingList"):
+    elif intentname == add_prefix("isItemOnFreezerList"):
         result_sentence = shoppinglist.is_item(intent_message)
         hermes.publish_end_session(intent_message.session_id, result_sentence)
 
-    elif intentname == add_prefix("clearShoppingList"):
+    elif intentname == add_prefix("clearFreezerList"):
         result_sentence = shoppinglist.try_clear()
         if result_sentence == "empty":
-            result_sentence = "Die Einkaufsliste ist schon leer."
+            result_sentence = "Die Tiefkühlliste ist schon leer."
             hermes.publish_end_session(intent_message.session_id, result_sentence)
         else:
-            shoppinglist.wanted_intents = [add_prefix("confirmShoppingList")]
-            dialogue_conf = DialogueConfiguration().enable_intent(add_prefix("confirmShoppingList"))
+            shoppinglist.wanted_intents = [add_prefix("confirmFreezerList")]
+            dialogue_conf = DialogueConfiguration().enable_intent(add_prefix("confirmFreezerList"))
             hermes.configure_dialogue(dialogue_conf)
             hermes.subscribe_intent_not_recognized(intent_not_recognized_callback)
             hermes.publish_continue_session(intent_message.session_id, result_sentence,
                                             shoppinglist.wanted_intents)
         
-    elif intentname == add_prefix("confirmShoppingList"):
+    elif intentname == add_prefix("confirmFreezerList"):
         shoppinglist.wanted_intents = []
         result_sentence = shoppinglist.clear_confirmed(intent_message)
         hermes.publish_end_session(intent_message.session_id, result_sentence)
     
-    elif intentname == add_prefix("showShoppingList"):
+    elif intentname == add_prefix("showFreezerList"):
         result_sentence = shoppinglist.show()
         hermes.publish_end_session(intent_message.session_id, result_sentence)
 
-    elif intentname == add_prefix("sendShoppingList"):
+    elif intentname == add_prefix("sendFreezerList"):
         result_sentence = shoppinglist.send()
         hermes.publish_end_session(intent_message.session_id, result_sentence)
 
 
 def intent_not_recognized_callback(hermes, intent_message):
-    configure_message = DialogueConfiguration().disable_intent(add_prefix("confirmShoppingList"))
+    configure_message = DialogueConfiguration().disable_intent(add_prefix("confirmFreezerList"))
     hermes.configure_dialogue(configure_message)
     shoppinglist.wanted_intents = []
     hermes.publish_end_session({'sessionId': intent_message.session_id,
-                                'text': "Die Einkaufsliste wurde nicht gelöscht."})
+                                'text': "Die Tiefkühlliste wurde nicht gelöscht."})
 
 
 if __name__ == "__main__":
